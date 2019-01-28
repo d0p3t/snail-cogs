@@ -1,0 +1,9 @@
+{
+    "AUTHOR" : "Remco Troost (d0p3t#4590)",
+    "INSTALL_MSG" : "Punish has been installed. No documentation. Happy snails!",
+    "NAME" : "Punish V3 snail-edition",
+    "SHORT" : "Put misbehaving users in timeout using role permissions.",
+    "DESCRIPTION" : "V3 version of Punish by calebj. Put misbehaving users in timeout using role permissions. The default is to remove their permission to talk on ALL channels, but the overrides can be customized. Includes anti-evasion measures, voice mute support, modlog integration, timed or indefinite durations, designation of a timeout channel, and more.",
+    "REQUIREMENTS": ["tabulate"],
+    "TAGS" : ["utility", "punish", "mod", "mute", "moderation"]
+}
