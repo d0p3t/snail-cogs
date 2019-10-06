@@ -2,9 +2,10 @@ import asyncio
 from datetime import datetime
 import discord
 from collections import namedtuple
-from redbot.core import Config, checks, commands
+from redbot.core import Config, checks, commands, modlog
 from redbot.core.bot import Red
 from redbot.core.utils.chat_formatting import pagify, box, warning, error, info, bold
+from redbot.core.utils.mod import is_allowed_by_hierarchy, is_admin_or_superior
 import inspect
 import logging
 import os
@@ -304,11 +305,11 @@ class Punish(commands.Cog):
     # dataIO.save_json(JSON, self.json)
 
     def can_create_cases(self):
-        mod = self.bot.get_cog("Mod")
+        mod = self.bot.get_cog("mod")
         if not mod:
             return False
 
-        sig = inspect.signature(mod.new_case)
+        sig = inspect.signature(modlog.create_case)
         return "force_create" in sig.parameters
 
     @commands.group(pass_context=True, invoke_without_command=True, no_pm=True)
@@ -587,23 +588,21 @@ class Punish(commands.Cog):
                 msg = "Reason cleared"
 
             caseno = data.get("caseno")
-            mod = self.bot.get_cog("Mod")
 
-            if mod and caseno and ENABLE_MODLOG:
+            if caseno and ENABLE_MODLOG:
                 moderator = ctx.message.author
                 case_error = None
 
                 try:
-                    if moderator.id != data["by"] and not mod.is_admin_or_superior(
+                    if moderator.id != data["by"] and not await is_admin_or_superior(
                         moderator
                     ):
                         moderator = (
                             server.get_member(data["by"]) or server.me
                         )  # fallback gracefully
-
-                    await mod.update_case(
-                        server, case=caseno, reason=reason, mod=moderator
-                    )
+                    
+                    case = await modlog.get_case(caseno, server, self.bot)
+                    await case.edit(reason=reason, mod=moderator)
                 except CaseMessageNotFound:
                     case_error = "the case message could not be found"
                 except NoModLogAccess:
@@ -1170,7 +1169,6 @@ class Punish(commands.Cog):
         using_default = False
         updating_case = False
         case_error = None
-        mod = self.bot.get_cog("mod")
 
         async with self.config.member(member)() as current:
             reason = reason or current["reason"]  # don't clear if not given
@@ -1178,7 +1176,7 @@ class Punish(commands.Cog):
             case_min_length = await self.config.guild(server).case_min_length()
 
             if mod:
-                hierarchy_allowed = await mod.is_allowed_by_hierarchy(
+                hierarchy_allowed = await is_allowed_by_hierarchy(
                     server, ctx.message.author, member
                 )
 
@@ -1233,22 +1231,23 @@ class Punish(commands.Cog):
                         # command author doesn't qualify to edit a case
                         if moderator.id != current[
                             "by"
-                        ] and not mod.is_admin_or_superior(moderator):
+                        ] and not await is_admin_or_superior(moderator):
                             moderator = (
                                 server.get_member(current["by"]) or server.me
                             )  # fallback gracefully
-
-                        await mod.update_case(
-                            server,
-                            case=case_number,
+                        
+                        case = await modlog.get_case(case_number, server, self.bot)
+                        await case.edit(
                             reason=reason,
                             mod=moderator,
                             until=mod_until and mod_until.timestamp() or False,
                         )
                     else:
-                        case_number = await mod.new_case(
+                        case_number = await modlog.create_case(
+                            ctx.bot,
                             server,
-                            action=ACTION_STR,
+                            created_at=datetime.utcnow(),
+                            action_type=ACTION_STR,
                             mod=ctx.message.author,
                             user=member,
                             reason=reason,
@@ -1390,7 +1389,6 @@ class Punish(commands.Cog):
             async with self.config.guild(member.guild)() as data:
                 async with self.config.member(member)() as member_data:
                     caseno = member_data["caseno"]
-                    mod = self.bot.get_cog("Mod")
 
                     # Has to be done first to prevent triggering listeners
                     await self._unpunish_data(member)
@@ -1408,7 +1406,7 @@ class Punish(commands.Cog):
                         if (
                             moderator
                             and moderator.id != member_data["by"]
-                            and not mod.is_admin_or_superior(moderator)
+                            and not await is_admin_or_superior(moderator)
                         ):
                             moderator = None
 
@@ -1420,13 +1418,8 @@ class Punish(commands.Cog):
                         )
 
                         try:
-                            await mod.update_case(
-                                server,
-                                case=caseno,
-                                reason=reason,
-                                mod=moderator,
-                                until=until,
-                            )
+                            case = await modlog.get_case(caseno, server, self.bot)
+                            await case.edit(reason=reason,mod=moderator,until=until)
                         except Exception:
                             pass
 
