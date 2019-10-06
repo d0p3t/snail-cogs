@@ -1374,7 +1374,7 @@ class Punish(commands.Cog):
             self.bot.loop.create_task(self._unpunish(member))
             return True
         else:
-            self.bot.loop.create_task(self.bot.request_offline_members(sever))
+            self.bot.loop.create_task(self.bot.request_offline_members(server))
             return False
 
     async def _unpunish(
