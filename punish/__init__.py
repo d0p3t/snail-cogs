@@ -1,6 +1,6 @@
 from .punish import Punish
+from redbot.core.bot import Red
 
-async def setup(bot):
+async def setup(bot: Red):
     cog = Punish(bot)
-    await cog.load_data()
     bot.add_cog(cog)
