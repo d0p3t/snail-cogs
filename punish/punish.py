@@ -1178,7 +1178,7 @@ class Punish(commands.Cog):
             case_min_length = await self.config.guild(server).case_min_length()
 
             if mod:
-                hierarchy_allowed = mod.is_allowed_by_hierarchy(
+                hierarchy_allowed = await mod.is_allowed_by_hierarchy(
                     server, ctx.message.author, member
                 )
 
