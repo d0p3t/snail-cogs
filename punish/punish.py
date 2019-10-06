@@ -1170,7 +1170,7 @@ class Punish(commands.Cog):
         using_default = False
         updating_case = False
         case_error = None
-        mod = self.bot.get_cog("Mod")
+        mod = self.bot.get_cog("mod")
 
         async with self.config.member(member)() as current:
             reason = reason or current["reason"]  # don't clear if not given
