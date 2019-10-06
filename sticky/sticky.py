@@ -24,21 +24,23 @@ import asyncio
 
 import discord
 from redbot.core import Config, checks, commands
+from redbot.core.bot import Red
 
 UNIQUE_ID = 0x6AFE8000
 
 
-class Sticky(getattr(commands, "Cog", object)):
+class Sticky(commands.Cog):
     """Sticky messages to your channels."""
 
     STICKY_DELAY = 3
 
-    def __init__(self, bot):
+    def __init__(self, bot: Red):
         self.bot = bot
         self.conf = Config.get_conf(self, identifier=UNIQUE_ID, force_registration=True)
         self.conf.register_channel(stickied=None, last=None)
         self.locked_channels = set()
 
+    @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         """Event which checks for sticky messages to resend."""
         channel = message.channel
@@ -116,6 +118,7 @@ class Sticky(getattr(commands, "Cog", object)):
         await ctx.send("Done.")
         self.locked_channels.remove(channel)
 
+    @commands.Cog.listener()
     async def on_raw_message_delete(
         self, payload: discord.raw_models.RawMessageDeleteEvent
     ):
