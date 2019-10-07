@@ -591,7 +591,7 @@ class Punish(commands.Cog):
 
                 try:
                     if moderator.id != data["by"] and not await is_admin_or_superior(
-                        moderator
+                        self.bot, moderator
                     ):
                         moderator = (
                             server.get_member(data["by"]) or server.me
@@ -1173,7 +1173,7 @@ class Punish(commands.Cog):
 
             if ENABLE_MODLOG:
                 hierarchy_allowed = await is_allowed_by_hierarchy(
-                    server, ctx.message.author, member
+                    self.bot, self.settings, server, ctx.message.author, member
                 )
 
             if not hierarchy_allowed:
@@ -1227,7 +1227,7 @@ class Punish(commands.Cog):
                         # command author doesn't qualify to edit a case
                         if moderator.id != current[
                             "by"
-                        ] and not await is_admin_or_superior(moderator):
+                        ] and not await is_admin_or_superior(self.bot, moderator):
                             moderator = (
                                 server.get_member(current["by"]) or server.me
                             )  # fallback gracefully
@@ -1399,7 +1399,7 @@ class Punish(commands.Cog):
                         if (
                             moderator
                             and moderator.id != member_data["by"]
-                            and not await is_admin_or_superior(moderator)
+                            and not await is_admin_or_superior(self.bot, moderator)
                         ):
                             moderator = None
 
