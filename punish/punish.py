@@ -1242,6 +1242,7 @@ class Punish(commands.Cog):
                             ctx.message.channel
                         )
                 except Exception as e:
+                    log.error(e)
                     case_error = e
             else:
                 case_number = None
