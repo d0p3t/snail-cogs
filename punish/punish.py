@@ -1231,14 +1231,15 @@ class Punish(commands.Cog):
                         await case.edit(modify)
                     else:
                         case_number = await modlog.create_case(
-                            self.bot,
+                            ctx.bot,
                             server,
-                            created_at=datetime.utcnow(),
-                            action_type=ACTION_STR,
-                            mod=ctx.message.author,
-                            user=member,
-                            reason=reason,
-                            until=mod_until
+                            ctx.message.created_at,
+                            ACTION_STR,
+                            member,
+                            ctx.message.author,
+                            reason,
+                            mod_until,
+                            ctx.message.channel
                         )
                 except Exception as e:
                     case_error = e
