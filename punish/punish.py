@@ -1173,7 +1173,7 @@ class Punish(commands.Cog):
 
             if ENABLE_MODLOG:
                 hierarchy_allowed = await is_allowed_by_hierarchy(
-                    self.bot, self.settings, server, ctx.message.author, member
+                    self.bot, self.config, server, ctx.message.author, member
                 )
 
             if not hierarchy_allowed:
