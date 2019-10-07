@@ -296,6 +296,20 @@ class Punish(commands.Cog):
         self.enqueued = set()
 
         self.task = self.bot.loop.create_task(self.on_load())
+        self.bot.loop.create_task(self._register_casetype())
+
+    @staticmethod
+    async def _register_casetype():
+        casetype = {
+            "name": "punish",
+            "default_setting": True,
+            "image": "\N{SPEAKER WITH CANCELLATION STROKE}",
+            "case_str": ACTION_STR,
+        }
+        try:
+            await modlog.register_casetype(**casetype)
+        except RuntimeError:
+            pass
 
     async def __unload(self):
         await self.task.cancel()
