@@ -6,7 +6,6 @@ from redbot.core import Config, checks, commands
 from redbot.core.bot import Red
 from redbot.core.utils.chat_formatting import pagify, box, warning, error, info, bold
 from redbot.core.utils.mod import is_allowed_by_hierarchy, is_admin_or_superior
-import inspect
 import logging
 import os
 import re
@@ -300,13 +299,6 @@ class Punish(commands.Cog):
 
     async def __unload(self):
         await self.task.cancel()
-
-    # def save(self):
-    # dataIO.save_json(JSON, self.json)
-
-    def can_create_cases(self):
-        sig = inspect.signature(modlog.create_case)
-        return "force_create" in sig.parameters
 
     @commands.group(pass_context=True, invoke_without_command=True, no_pm=True)
     @checks.mod_or_permissions(manage_messages=True)
@@ -1214,7 +1206,7 @@ class Punish(commands.Cog):
                 (duration is None) or duration >= case_min_length
             )
 
-            if self.can_create_cases() and duration_ok and ENABLE_MODLOG:
+            if duration_ok and ENABLE_MODLOG:
                 mod_until = until and datetime.utcfromtimestamp(until)
 
                 try:
@@ -1279,7 +1271,7 @@ class Punish(commands.Cog):
 
                 msg += " I will remove %s in %s." % (subject, timespec)
 
-            if duration_ok and not (self.can_create_cases() and ENABLE_MODLOG):
+            if duration_ok and not ENABLE_MODLOG:
                 msg += "\n\n" + warning(
                     "If you can, please update the bot so I can create modlog cases."
                 )
