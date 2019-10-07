@@ -1230,7 +1230,7 @@ class Punish(commands.Cog):
                         )
                     else:
                         case_number = await modlog.create_case(
-                            ctx.bot,
+                            self.bot,
                             server,
                             created_at=datetime.utcnow(),
                             action_type=ACTION_STR,
