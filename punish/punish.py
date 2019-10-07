@@ -1208,7 +1208,7 @@ class Punish(commands.Cog):
                 mod_until = until and datetime.utcfromtimestamp(until)
 
                 try:
-                    if current:
+                    if current["caseno"]:
                         case_number = current["caseno"]
                         moderator = ctx.message.author
                         updating_case = True
