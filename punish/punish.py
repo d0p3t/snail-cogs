@@ -591,10 +591,8 @@ class Punish(commands.Cog):
                     
                     case = await modlog.get_case(caseno, server, self.bot)
                     await case.edit(reason=reason, mod=moderator)
-                except CaseMessageNotFound:
+                except RuntimeError:
                     case_error = "the case message could not be found"
-                except NoModLogAccess:
-                    case_error = "I do not have access to the modlog channel"
                 except Exception:
                     pass
 
@@ -1276,10 +1274,8 @@ class Punish(commands.Cog):
                     "If you can, please update the bot so I can create modlog cases."
                 )
             elif case_error and ENABLE_MODLOG:
-                if isinstance(case_error, CaseMessageNotFound):
+                if isinstance(case_error, RuntimeError):
                     case_error = "the case message could not be found"
-                elif isinstance(case_error, NoModLogAccess):
-                    case_error = "I do not have access to the modlog channel"
                 else:
                     case_error = None
 
