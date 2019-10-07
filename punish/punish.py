@@ -590,7 +590,7 @@ class Punish(commands.Cog):
                         )  # fallback gracefully
                     
                     case = await modlog.get_case(caseno, server, self.bot)
-                    await case.edit(reason=reason, mod=moderator)
+                    await case.edit({reason: reason, mod: moderator})
                 except RuntimeError:
                     case_error = "the case message could not be found"
                 except Exception:
@@ -1223,11 +1223,12 @@ class Punish(commands.Cog):
                             )  # fallback gracefully
                         
                         case = await modlog.get_case(case_number, server, self.bot)
-                        await case.edit(
-                            reason=reason,
-                            mod=moderator,
-                            until=mod_until and mod_until.timestamp() or False,
-                        )
+                        modify = {
+                            "reason": reason,
+                            "mod": moderator,
+                            "until": mod_until and mod_until.timestamp() or False
+                        }
+                        await case.edit(modify)
                     else:
                         case_number = await modlog.create_case(
                             self.bot,
@@ -1237,8 +1238,7 @@ class Punish(commands.Cog):
                             mod=ctx.message.author,
                             user=member,
                             reason=reason,
-                            until=mod_until,
-                            force_create=True,
+                            until=mod_until
                         )
                 except Exception as e:
                     case_error = e
@@ -1400,7 +1400,7 @@ class Punish(commands.Cog):
 
                         try:
                             case = await modlog.get_case(caseno, server, self.bot)
-                            await case.edit(reason=reason,mod=moderator,until=until)
+                            await case.edit({"reason": reason, mod: moderator, until: until})
                         except Exception:
                             pass
 
