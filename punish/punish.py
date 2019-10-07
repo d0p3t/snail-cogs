@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime
 import discord
 from collections import namedtuple
-from redbot.core import Config, checks, commands, modlog
+from redbot.core import Config, checks, commands
 from redbot.core.bot import Red
 from redbot.core.utils.chat_formatting import pagify, box, warning, error, info, bold
 from redbot.core.utils.mod import is_allowed_by_hierarchy, is_admin_or_superior
@@ -305,10 +305,6 @@ class Punish(commands.Cog):
     # dataIO.save_json(JSON, self.json)
 
     def can_create_cases(self):
-        mod = self.bot.get_cog("mod")
-        if not mod:
-            return False
-
         sig = inspect.signature(modlog.create_case)
         return "force_create" in sig.parameters
 
