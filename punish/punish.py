@@ -1171,7 +1171,7 @@ class Punish(commands.Cog):
             hierarchy_allowed = ctx.message.author.top_role > member.top_role
             case_min_length = await self.config.guild(server).case_min_length()
 
-            if mod:
+            if ENABLE_MODLOG:
                 hierarchy_allowed = await is_allowed_by_hierarchy(
                     server, ctx.message.author, member
                 )
@@ -1214,7 +1214,7 @@ class Punish(commands.Cog):
                 (duration is None) or duration >= case_min_length
             )
 
-            if mod and self.can_create_cases() and duration_ok and ENABLE_MODLOG:
+            if self.can_create_cases() and duration_ok and ENABLE_MODLOG:
                 mod_until = until and datetime.utcfromtimestamp(until)
 
                 try:
@@ -1280,12 +1280,9 @@ class Punish(commands.Cog):
                 msg += " I will remove %s in %s." % (subject, timespec)
 
             if duration_ok and not (self.can_create_cases() and ENABLE_MODLOG):
-                if mod:
-                    msg += "\n\n" + warning(
-                        "If you can, please update the bot so I can create modlog cases."
-                    )
-                else:
-                    pass  # msg += '\n\nI cannot create modlog cases if the `mod` cog is not loaded.'
+                msg += "\n\n" + warning(
+                    "If you can, please update the bot so I can create modlog cases."
+                )
             elif case_error and ENABLE_MODLOG:
                 if isinstance(case_error, CaseMessageNotFound):
                     case_error = "the case message could not be found"
