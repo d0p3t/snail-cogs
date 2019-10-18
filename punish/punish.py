@@ -300,9 +300,6 @@ class Punish(commands.Cog):
     async def __unload(self):
         await self.task.cancel()
 
-    # def save(self):
-    # dataIO.save_json(JSON, self.json)
-
     def can_create_cases(self):
         mod = self.bot.get_cog("Mod")
         if not mod:
