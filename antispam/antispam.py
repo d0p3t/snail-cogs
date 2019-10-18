@@ -45,8 +45,6 @@ class AntiSpam(commands.Cog):
         while True:
             try:
                 await self.config.clear_all_members()
-
-                print("sleep")
                 await asyncio.sleep(6000 * 60)
 
             except asyncio.CancelledError:
