@@ -1144,7 +1144,7 @@ class Punish(commands.Cog):
 
         if diff < 0:
             if self.execute_queue_event(*args):
-                return
+                return True
         elif diff < QUEUE_TIME_CUTOFF:
             self.pending[args] = self.bot.loop.call_later(
                 diff, self.execute_queue_event, *args
