@@ -240,6 +240,12 @@ class AntiSpam(commands.Cog):
         if user == guild.me:
             return
 
+        content = message.content
+
+        # Empty string so we return
+        if not content.strip():
+            return
+
         enabled = await self.config.guild(guild).enabled()
 
         if enabled is True:
