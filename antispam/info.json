@@ -1,0 +1,14 @@
+{
+    "AUTHOR": "Remco Troost (d0p3t#4590)",
+    "INSTALL_MSG": "AntiSpam has been installed. No documentation. Happy snails!",
+    "NAME": "AntiSpam V3 snail-edition",
+    "SHORT": "Blocks any Discord links and repeated messages.",
+    "DESCRIPTION": "Blocks any Discord links and repeated messages.",
+    "REQUIREMENTS": [],
+    "TAGS": [
+        "utility",
+        "antispam",
+        "mod",
+        "moderation"
+    ]
+}
