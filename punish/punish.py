@@ -602,7 +602,7 @@ class Punish(commands.Cog):
                         moderator = (
                             server.get_member(data["by"]) or server.me
                         )  # fallback gracefully
-                    
+
                     case = await modlog.get_case(caseno, server, self.bot)
                     await case.edit({reason: reason, mod: moderator})
                 except RuntimeError:
@@ -1235,7 +1235,7 @@ class Punish(commands.Cog):
                             moderator = (
                                 server.get_member(current["by"]) or server.me
                             )  # fallback gracefully
-                        
+
                         case = await modlog.get_case(case_number, server, self.bot)
                         modify = {
                             "reason": reason,
@@ -1445,7 +1445,7 @@ class Punish(commands.Cog):
         await self.config.member(member).clear()
 
     # Listeners
-
+    @commands.Cog.listener()
     async def on_channel_create(self, channel):
         """Run when new channels are created and set up role permissions"""
         if channel.is_private:
@@ -1457,6 +1457,7 @@ class Punish(commands.Cog):
 
         await self.setup_channel(channel, role)
 
+    @commands.Cog.listener()
     async def on_member_update(self, before, after):
         """Remove scheduled unpunish when manually removed"""
         async with self.config.member(before)() as member_data:
@@ -1468,6 +1469,7 @@ class Punish(commands.Cog):
 
                 await self._unpunish(after, msg, remove_role=False, update=True)
 
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         """Restore punishment if punished user leaves/rejoins"""
         role = await self.get_role(member.guild, member, quiet=True)
