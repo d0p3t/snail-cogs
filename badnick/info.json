@@ -1,0 +1,9 @@
+{
+  "AUTHOR": "Remco Troost (d0p3t#4590)",
+  "INSTALL_MSG": "BadNick has been installed. No documentation. Happy snails!",
+  "NAME": "BadNick V1 snail-edition",
+  "SHORT": "Prevents malicious or unwanted nicknames.",
+  "DESCRIPTION": "Prevents a user to use a non-ASCII nickname that might be malicious or unwanted. Also detects nicknames that try to hoist member list.",
+  "REQUIREMENTS": ["homoglyphs"],
+  "TAGS": ["utility", "antihoist", "mod", "moderation"]
+}
